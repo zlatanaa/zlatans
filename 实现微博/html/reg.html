@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input{
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <form name="regForm">
+        用户名:<input type="text" name="userName">
+        <br/>
+        密码:<input type="text" name="passWord">
+        <br/>
+        确认密码:<input type="text" name="rePassWord">
+        <br/>
+        <input type="button" value="注册">
+    </form>
+
+    <script>
+        const btn = document.querySelector('input[type=button]')
+        btn.onclick = function(){
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'json'
+            xhr.open('post','http://127.0.0.1/reg')
+            xhr.setRequestHeader('Content-Type','application/json')
+            xhr.send(JSON.stringify({
+                userName:document.regForm.userName.value.trim(),
+                passWord:document.regForm.passWord.value.trim(),
+                rePassWord:document.regForm.rePassWord.value.trim()
+            }));
+            xhr.onload = function(){
+                const{ok,msg} = xhr.response
+                if(ok === 1){
+                    location.href = './login.html'
+                }else{
+                    alert(msg)
+                }
+                console.log(xhr.response);
+            }
+        }
+    </script>
+</body>
+</html>

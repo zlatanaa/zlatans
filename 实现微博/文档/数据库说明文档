@@ -1,0 +1,13 @@
+库名：weibo
+1、用户列表集合 userList
+    _id   唯一标识
+    userName  用户名
+    passWord  密码
+    regTime   注册时间
+2、微博列表集合 contentList
+    _id   唯一标识
+    content 微博内容
+    topNum  顶
+    downNum 踩
+    addTime 添加时间
+    userName  添加微博的用户

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form name="loginForm">
+        <p>用户名: <input type="text" name="userName"></p>
+        <p>密码: <input type="text" name="passWord"></p>
+        <p> <input type="button" value="登录"></p>
+    </form>
+    <script>
+        const btn = document.querySelector('input[type=button]')
+        btn.onclick = function(){
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'json'
+            xhr.open('post','http://127.0.0.1/login')
+            xhr.setRequestHeader('Content-Type','application/json')
+            xhr.send(JSON.stringify({
+                userName:document.loginForm.userName.value.trim(),
+                passWord:document.loginForm.passWord.value.trim()
+            }))
+            xhr.onload = function(){
+                const {ok,msg} = xhr.response;
+                if(ok === 1){
+                    // 作用：用于请求时，服务端进行身份验证
+                    localStorage.setItem('token',xhr.getResponseHeader('token'))
+                    localStorage.setItem('userName',document.loginForm.userName.value.trim())
+                    location.href = './weibo.html'
+                }else{
+                    alert(msg)
+                }
+                
+            }
+        }
+    </script>
+</body>
+</html>

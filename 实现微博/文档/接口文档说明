@@ -1,0 +1,50 @@
+1、注册接口
+    接口地址：http://127.0.0.1/reg
+    请求方式：post
+    接收的参数：
+        userName  用户名
+        passWord  密码
+        rePassWord 重复密码
+    返回的结果：
+        {
+            ok:1 注册成功 -1 注册失败
+            msg:"返回文字说明"
+        }
+2、登陆接口
+    接口地址：http://127.0.0.1/login
+    请求方式：post
+    接收的参数：
+        userName  用户名
+        passWord  密码
+    返回的结果：
+        // 在响应头中增加token.
+        {
+            ok:1 成功 -1 失败
+
+            msg:"返回文字说明"
+        }
+3、添加微博
+    接口地址：http://127.0.0.1/weibo
+    请求方式：post
+    接收的参数：
+        userName  微博的内容
+    在请求头中，增加token。一般token存放的请求头的名字：authorization  token
+    返回的结果：
+        // 在响应头中增加token.
+        {
+            ok:1 成功 -1 失败  -2 token异常
+            msg:"返回文字说明"
+        }
+4、获取微博
+    接口地址：http://127.0.0.1/weibo
+    请求方式:get
+    接收的参数：
+        pageIndex  页数
+    在请求头中，增加token。一般token存放的请求头的名字：authorization  token
+    返回的结果：
+        // 在响应头中增加token.
+        {
+            ok:1 成功 -1 失败  -2 token异常
+            contentList:微博的列表
+            msg:"返回文字说明"
+        }

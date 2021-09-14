@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>微博</title>
+<link href="style/weibo.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        <h3>
+            欢迎<span style="color: lightsalmon;margin:0px 8px;" id="welcome">xxx</span>进入直播间<button style="color: red;margin-left:20px;" id="loginout">退出登录</button>
+        </h3>
+    </div>
+<div class="jyArea">
+<!--留言-->
+     <div class="takeComment">
+        <textarea name="textarea" class="takeTextField" id="tijiaoText"></textarea>
+        <div class="takeSbmComment">
+            <input type="button" class="inputs" value="" />
+        </div>
+    </div>
+<!--已留-->
+    <div class="commentOn">
+        <div class="noContent">暂无留言</div>
+        <div class="messList">
+        	<div class="reply">
+                <p class="replyContent">内容</p>
+                <p class="operation">
+                    <span class="replyTime">2020.03.10 01:01:01</span>
+                    <span class="handle">
+                    	<a href="javascript:;" class="top">0</a>
+                        <a href="javascript:;" class="down_icon">9</a>
+                        <a href="javascript:;" class="cut">删除</a>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <div class="page">
+        	<a href="javascript:;" class="active">1</a>
+        	<a href="javascript:;">2</a>
+        	<a href="javascript:;">3</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    if(localStorage.getItem('token')){
+        let pageIndex = 1 //当前页
+        // 将登陆的用户名放置到#welcome元素中
+        document.querySelector('#welcome').innerHTML = localStorage.getItem('userName')
+        // 退出
+        const loginOutBtn = document.querySelector('#loginout')
+        loginOutBtn.onclick = function(){
+            localStorage.clear();//清空storage
+            location.href = './login.html'
+        }
+        // 添加微博
+        const addBtn = document.querySelector('.inputs')
+        const content = document.querySelector('#tijiaoText')
+        addBtn.onclick = function(){
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'json'
+            xhr.open('post','http://127.0.0.1/weibo')
+            xhr.setRequestHeader('Content-Type','application/json')
+            xhr.setRequestHeader('authorization',localStorage.getItem('token'))
+            xhr.send(JSON.stringify({
+                content:content.value.trim()
+            }))
+            xhr.onload = function(){
+                const{ok,msg} = xhr.response
+                if(ok === 1){
+                    console.log('提交成功啦',msg)
+                    content.value = null
+                    getWeibo()
+                }else if(ok === -2){
+                    localStorage.clear()
+                    alert(msg)
+                    location.href = './login.html'
+                }else{
+                    alert(msg)
+                }
+                console.log(xhr.response)
+            }
+        }
+
+        // 获取微博
+        const commentOn = document.querySelector(".commentOn");
+        getWeibo();
+        function getWeibo(pageNo=1){
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = "json";
+            xhr.open("get","http://127.0.0.1/weibo?pageNo="+pageNo);
+            xhr.setRequestHeader("authorization",localStorage.getItem("token"));
+            xhr.send();
+            xhr.onload = function () {
+                const {ok,msg,contentList,pageNo,pageSum} = xhr.response;
+                pageIndex = pageNo;
+                if(ok === 1){
+                    const arr = [];
+                    for(let i=1;i<=pageSum;i++){
+                        arr.push(`<a onclick="getWeibo(${i})" href="javascript:;" class="${i===pageNo?"active":""}">${i}</a>`);
+                    }
+                    commentOn.innerHTML = `
+                        <div class="noContent" style="display:${contentList.length>0?"none":"block"}">暂无留言</div>
+                        <div class="messList">
+                            ${contentList.map(item=>(`
+                                <div class="reply">
+                                    <p class="replyContent">${item.userName}：  ${item.content}</p>
+                                    <p class="operation">
+                                        <span class="replyTime">${item.addTime}</span>
+                                        <span class="handle">
+                                            <a href="javascript:;" onclick="upWeibo('${item._id}',1)" class="top">${item.topNum}</a>
+                                            <a href="javascript:;" onclick="upWeibo('${item._id}',2)" class="down_icon">${item.downNum}</a>
+                                            <a href="javascript:;" onclick="delWeibo('${item._id}')" class="cut">删除</a>
+                                        </span>
+                                    </p>
+                                </div>
+                            `)).join("")}
+                        </div>
+                        <div class="page">
+                            ${arr.join("")}
+                        </div>
+                    `
+                }
+                else if(ok === -2){
+                    localStorage.clear();
+                    alert(msg);
+                    location.href = "./login.html";
+                }
+                else{
+                    alert(msg);
+                }
+            }
+        }
+        // 根据ID删除微博
+        function delWeibo(id){
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'json'
+            xhr.open('delete','http://127.0.0.1/weibo/'+id);
+            xhr.setRequestHeader('authorization',localStorage.getItem('token'))
+            xhr.send()
+            xhr.onload = function(){
+                const {ok,msg} = xhr.response
+                if(ok === 1){
+                   getWeibo(pageIndex)
+                //    alert(msg)
+                } 
+                else if(ok === -2){
+                    localStorage.clear()
+                    alert(msg)
+                    location.href = './login.html'
+                }else{
+                    alert(msg)
+                }
+            }
+        }
+        // 根据ID实现修改
+        function upWeibo(id,type){
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'json'
+            xhr.open('put','http://127.0.0.1/weibo/'+id+'/'+type)
+            xhr.setRequestHeader('authorization',localStorage.getItem('token'))
+            xhr.send()
+            xhr.onload = function(){
+                const{ok,msg} = xhr.response;
+                if(ok === 1){
+                    getWeibo(pageIndex)
+                }else if(ok === -2){
+                    localStorage.clear()
+                    alert(msg)
+                    location.href = './login.html'
+                }else{
+                    alert(msg)
+                }
+            }
+        }
+    }else{
+        location.href = './login.html'
+    }
+</script>
+</body>
+</html>
