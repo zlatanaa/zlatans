@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html,body ,#root {
+    height: 100%;
+}
+ .wrap{
+    background-color: white;
+    height: 100%;
+}
+.selectPhone{
+    display: flex;
+    align-items: center;
+}
+.getToken{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.getToken a{
+    color: black;
+    margin-left: 18px;
+}
+.getToken span{
+    color: #ccc;
+}
+.btn-login{
+    border-radius: 30px !important;
+    margin-top: 20px;
+}
+.underLogin{
+    display: flex;
+    justify-content: space-between;
+    color: #ccc ;
+    margin-top: 20px;
+}
+.underLogin a{
+    color: #ccc;
+}
+.otherLogin{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 80px;
+    color: #ccc;
+}
+.otherLogin .line{
+    width: 100px;
+    height: 1px;
+    background-color: #ccc;
+}
+.icons{
+    display: flex;
+    justify-content: space-around;
+  padding: 0 40px;
+  margin-top: 20px;
+}
+.icons i {
+    width: 45px;
+    height: 45px;
+    font-size: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 45px;
+  }
+  
+  .icons .icon-github {
+    background-color: rgb(173, 169, 169);
+  }
+  .icons .icon-wechat {
+    background-color: rgb(57, 180, 74);
+  }
+  .icons .icon-qq {
+    background-color: rgb(79, 135, 182);
+  }
+  .footer {
+    margin-top: 60px;
+    text-align: center;
+  }
+  
+
+

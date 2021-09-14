@@ -1,0 +1,15 @@
+.country-nav{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 54px;
+    right: 0;
+    z-index: 999;
+}
+.country-nav a{
+    margin-top: 10px;
+    color: #999;
+}
+.am-list-body {
+    padding-right: 20px;
+}
